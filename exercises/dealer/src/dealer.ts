@@ -12,6 +12,47 @@ function shuffleArray(a: any[]) {
   }
 }
 
-// export class Dealer {
+export enum Suit {
+  Clubs, Diamonds, Hearts, Spades
+}
 
-// }
+export enum CardNumber {
+  Ace, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Qeen, Kind
+}
+
+type Card = [Suit, CardNumber];
+
+function createDeck() : Card[] {
+  let cards : Card[] = []
+  for(let s = 0; s < Object.keys(Suit).length; s+=2) {
+    for(let n = 0; n < Object.keys(CardNumber).length; n+=2) {
+      cards.push([s/2, n/2])
+    }
+  }
+  return cards;
+}
+
+export class Dealer {
+  cards: Card[] = [];
+  constructor() {
+    this.cards = createDeck();
+    shuffleArray(this.cards);
+  }
+
+
+  dealHand(numCards: number) : Card[] {
+    if (numCards > this.getLength()) throw new Error('Not enough cards left');
+    if (numCards < 0) throw new Error('Negative numbers');
+    return this.cards.splice(this.getLength() - numCards, numCards)
+  }
+
+  getLength(): number {
+    return this.cards.length;
+  }
+
+  readCard(card: Card) : string {
+    let [suit, cardNumber] = card;
+    return `${CardNumber[cardNumber]} of ${Suit[suit]}`
+  }
+
+}
